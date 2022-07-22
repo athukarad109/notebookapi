@@ -2,8 +2,14 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send("Hello from router auth");
+const User = require('../models/User');
+
+//creating user
+router.post('/', (req, res) => {
+    const user = User(req.body);
+    user.save();
+    res.send(user);
+    console.log("Success")
 })
 
 module.exports = router

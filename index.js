@@ -4,6 +4,8 @@ const connectToMongo = require('./db');
 const app = express();
 const port = 5000;
 
+app.use(express.json());
+
 connectToMongo();
 
 app.use('/api/auth', require('./routes/auth.js'))
