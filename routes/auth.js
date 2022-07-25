@@ -6,10 +6,14 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 const User = require('../models/User');
+const fetchUser = require('../middleware/fetchUser')
 
 const JWTSECRET = "generalkenobi"
 
+
+//Route 2
 //creating user
+
 router.post('/createuser', [
     //validating
     body('email', 'Enter a valid email').isEmail(),
@@ -50,6 +54,8 @@ router.post('/createuser', [
     }
 })
 
+
+//Route 2
 //authenticating a user - login
 
 router.post('/login', [
@@ -92,5 +98,19 @@ router.post('/login', [
         }
 
     })
+
+
+//Route 4
+//Getting user details of logged in user
+
+router.post('/getUser', fetchUser, async(req, res) => {
+    try {
+        let userId = req.user.id;
+        const user = await User.findById(userId).select("-password")
+        res.send(user);
+    } catch (e) {
+        res.status(500).send("Something went wrong")
+    }
+})
 
 module.exports = router
