@@ -59,7 +59,7 @@ router.post('/addnote', fetchUser, [
 router.put('/updateNote/:id', fetchUser, async(req, res) => {
 
     try {
-        const { title, description, tags } = req.body;
+        const { title, description, tag } = req.body;
 
         const newNote = {};
         if (title) {
@@ -68,8 +68,8 @@ router.put('/updateNote/:id', fetchUser, async(req, res) => {
         if (description) {
             newNote.description = description;
         }
-        if (tags) {
-            newNote.tags = tags;
+        if (tag) {
+            newNote.tag = tag;
         }
 
         //finding note to be updated

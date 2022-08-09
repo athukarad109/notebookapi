@@ -21,6 +21,7 @@ router.post('/createuser', [
         body('password', 'Password cannot be this short').isLength({ min: 5 })
     ],
     async(req, res) => {
+        let success = false;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -47,11 +48,11 @@ router.post('/createuser', [
                 }
             }
             const authToken = jwt.sign(data, JWTSECRET)
-
-            res.json({ authToken })
+            success = true
+            res.json({success, authToken })
 
         } catch (e) {
-            res.status(500).send("Something went wrong")
+            res.status(500).json({success, error: 'Something went wrong'})
         }
     })
 
@@ -66,6 +67,7 @@ router.post('/login', [
     ],
 
     async(req, res) => {
+        let success = false;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -92,10 +94,11 @@ router.post('/login', [
             }
 
             const authToken = jwt.sign(data, JWTSECRET)
-            res.send(authToken)
+            success = true
+            res.status(200).json({success, authToken})
 
         } catch (e) {
-            res.status(500).send("Something went wrong")
+            res.status(500).json({success, error: "Something went wrong"})
         }
 
     })
@@ -108,7 +111,7 @@ router.post('/getUser', fetchUser, async(req, res) => {
     try {
         let userId = req.user.id;
         const user = await User.findById(userId).select("-password")
-        res.send(user);
+        res.json(user);
     } catch (e) {
         res.status(500).send("Something went wrong")
     }
